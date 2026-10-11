@@ -1,0 +1,111 @@
+{% set ep = request.endpoint or '' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}GitHub Manager{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/icons.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  {% if session.get('token') %}
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" hidden />
+  <div class="app">
+    <!-- ============ Sidebar ============ -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span class="brand-text">GitHub Manager<small>Repo Control Panel</small></span>
+      </div>
+
+      <nav class="side-nav">
+        <span class="label">Menu</span>
+        <a class="side-link {{ 'active' if ep == 'dashboard' }}"
+           href="{{ url_for('dashboard') }}">
+          <span class="ico ico-grid"></span> Dashboard
+        </a>
+        <a class="side-link {{ 'active' if ep == 'create_page' }}"
+           href="{{ url_for('create_page') }}">
+          <span class="ico ico-plus"></span> Create Repository
+        </a>
+        <a class="side-link {{ 'active' if ep == 'repositories' }}"
+           href="{{ url_for('repositories') }}">
+          <span class="ico ico-branch"></span> My Repositories
+        </a>
+        <a class="side-link {{ 'active' if ep == 'settings' }}"
+           href="{{ url_for('settings') }}">
+          <span class="ico ico-gear"></span> Settings
+        </a>
+
+        <span class="label" style="margin-top:14px">Actions</span>
+        <a class="side-link" href="{{ url_for('repositories') }}">
+          <span class="ico ico-upload"></span> Upload Files
+        </a>
+        <a class="side-link" href="{{ url_for('repositories') }}">
+          <span class="ico ico-zip"></span> Upload ZIP (Auto Unzip)
+        </a>
+      </nav>
+
+      <div class="side-foot">
+        <div class="side-user">
+          <span class="avatar">{{ (session.get('login') or '?')[0] }}</span>
+          <div>
+            <div class="u-name">{{ session.get('login') }}</div>
+            <div class="u-status"><span class="dot"></span> Connected to GitHub</div>
+          </div>
+        </div>
+        Built with Flask &middot; GitHub API
+      </div>
+    </aside>
+
+    <!-- ============ Main ============ -->
+    <div class="main">
+      <header class="topbar">
+        <label for="nav-toggle" class="hamburger" aria-label="Toggle menu">
+          <span class="ico ico-menu"></span>
+        </label>
+
+        <nav class="top-nav">
+          <a class="{{ 'active' if ep == 'dashboard' }}" href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a class="{{ 'active' if ep == 'create_page' }}" href="{{ url_for('create_page') }}">Create Repository</a>
+          <a class="{{ 'active' if ep == 'repositories' }}" href="{{ url_for('repositories') }}">My Repositories</a>
+        </nav>
+
+        <span class="spacer"></span>
+
+        <div class="top-user">
+          <div class="who">
+            <div class="n">{{ session.get('login') }}</div>
+            <div class="s">Logged in</div>
+          </div>
+          <span class="avatar" style="width:34px;height:34px;border-radius:9px">
+            {{ (session.get('login') or '?')[0] }}
+          </span>
+          <a class="btn btn-ghost btn-sm" href="{{ url_for('logout') }}">
+            <span class="ico ico-close"></span> Logout
+          </a>
+        </div>
+      </header>
+
+      <main class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+
+    <label for="nav-toggle" class="overlay" aria-hidden="true"></label>
+  </div>
+  {% else %}
+    {% block auth_content %}{% endblock %}
+  {% endif %}
+</body>
+</html>

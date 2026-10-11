@@ -1,0 +1,513 @@
+/* ==========================================================================
+   Pure-CSS icon library
+   Every icon is built from borders, pseudo-elements and gradients only.
+   No images, no SVG, no icon fonts.
+   Usage:  <span class="ico ico-folder"></span>
+   ========================================================================== */
+
+.ico {
+  display: inline-block;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  color: inherit;
+  line-height: 0;
+}
+
+/* ---- Grid / Dashboard ---- */
+.ico-grid {
+  width: 6px;
+  height: 6px;
+  margin: 6px;
+  background: currentColor;
+  border-radius: 1.5px;
+  box-shadow: 9px 0 0 currentColor, 0 9px 0 currentColor, 9px 9px 0 currentColor;
+}
+
+/* ---- Plus ---- */
+.ico-plus::before,
+.ico-plus::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+  border-radius: 2px;
+}
+.ico-plus::before {
+  left: 2px;
+  top: 8px;
+  width: 14px;
+  height: 2px;
+}
+.ico-plus::after {
+  left: 8px;
+  top: 2px;
+  width: 2px;
+  height: 14px;
+}
+
+/* ---- Folder ---- */
+.ico-folder {
+  width: 18px;
+  height: 14px;
+  margin-top: 2px;
+}
+.ico-folder::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 18px;
+  height: 11px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.ico-folder::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 9px;
+  height: 5px;
+  background: currentColor;
+  border-radius: 2px 2px 0 0;
+}
+
+/* ---- File ---- */
+.ico-file {
+  width: 14px;
+  height: 17px;
+  background: currentColor;
+  border-radius: 2px;
+  clip-path: polygon(0 0, 66% 0, 100% 30%, 100% 100%, 0 100%);
+}
+
+/* ---- Archive / ZIP ---- */
+.ico-zip {
+  width: 15px;
+  height: 17px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+.ico-zip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 1px;
+  bottom: 1px;
+  width: 2px;
+  transform: translateX(-50%);
+  background: currentColor;
+  -webkit-mask: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 6px);
+  mask: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 6px);
+}
+
+/* ---- Upload (arrow up) ---- */
+.ico-upload::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  width: 2px;
+  height: 11px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.ico-upload::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 7px solid currentColor;
+}
+
+/* ---- Download (arrow down) ---- */
+.ico-download::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 1px;
+  width: 2px;
+  height: 11px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.ico-download::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid currentColor;
+}
+
+/* ---- Trash ---- */
+.ico-trash {
+  width: 15px;
+  height: 17px;
+}
+.ico-trash::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 4px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+}
+.ico-trash::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 15px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 5px -2px 0 -0.5px currentColor;
+}
+
+/* ---- Refresh (circular arrow) ---- */
+.ico-refresh {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+.ico-refresh::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -1px;
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-left-color: currentColor;
+  transform: rotate(45deg);
+}
+
+/* ---- Cloud ---- */
+.ico-cloud {
+  width: 22px;
+  height: 15px;
+}
+.ico-cloud::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 22px;
+  height: 9px;
+  background: currentColor;
+  border-radius: 6px;
+}
+.ico-cloud::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 7px 4px 0 -1px currentColor;
+}
+
+/* ---- Check ---- */
+.ico-check {
+  width: 8px;
+  height: 14px;
+  border-right: 2.5px solid currentColor;
+  border-bottom: 2.5px solid currentColor;
+  transform: rotate(45deg);
+}
+
+/* ---- User ---- */
+.ico-user {
+  width: 16px;
+  height: 16px;
+}
+.ico-user::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 1px;
+  width: 6px;
+  height: 6px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.ico-user::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: 0;
+  width: 14px;
+  height: 7px;
+  border: 2px solid currentColor;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+/* ---- Lock ---- */
+.ico-lock {
+  width: 14px;
+  height: 16px;
+}
+.ico-lock::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: 0;
+  width: 12px;
+  height: 9px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.ico-lock::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border: 2px solid currentColor;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+
+/* ---- Globe ---- */
+.ico-globe {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+.ico-globe::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.ico-globe::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+/* ---- Gear / Settings ---- */
+.ico-gear {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+.ico-gear::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.ico-gear::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    currentColor 0 9%, transparent 9% 25%,
+    currentColor 25% 34%, transparent 34% 50%,
+    currentColor 50% 59%, transparent 59% 75%,
+    currentColor 75% 84%, transparent 84% 100%
+  );
+  -webkit-mask: radial-gradient(circle, transparent 6px, #000 6.5px 8px, transparent 8.5px);
+  mask: radial-gradient(circle, transparent 6px, #000 6.5px 8px, transparent 8.5px);
+  border-radius: 50%;
+}
+
+/* ---- Branch / Repo ---- */
+.ico-branch {
+  width: 16px;
+  height: 16px;
+}
+.ico-branch::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 8px 0 -2px currentColor;
+}
+.ico-branch::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 6px;
+  width: 2px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+/* ---- Star ---- */
+.ico-star {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 14px solid currentColor;
+}
+.ico-star::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 5px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 9px solid currentColor;
+}
+
+/* ---- Code (</>) ---- */
+.ico-code::before,
+.ico-code::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid currentColor;
+}
+.ico-code::before {
+  left: 0;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  transform: rotate(-45deg);
+  border-left: 2px solid currentColor;
+  border-top: 2px solid currentColor;
+  border-radius: 2px 0 0 0;
+}
+.ico-code::after {
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+  border-right: 2px solid currentColor;
+  border-top: 2px solid currentColor;
+  transform: rotate(45deg);
+  border-radius: 0 2px 0 0;
+}
+
+/* ---- Arrow right ---- */
+.ico-arrow::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.ico-arrow::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+  border-radius: 1px;
+}
+
+/* ---- Close / X ---- */
+.ico-close::before,
+.ico-close::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.ico-close::before {
+  transform: rotate(45deg);
+}
+.ico-close::after {
+  transform: rotate(-45deg);
+}
+
+/* ---- Menu / hamburger ---- */
+.ico-menu::before,
+.ico-menu::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.ico-menu::before {
+  top: 5px;
+  box-shadow: 0 4px 0 currentColor;
+}
+.ico-menu::after {
+  top: 13px;
+}
+
+/* ---- Database / Storage ---- */
+.ico-db {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50% / 30%;
+}
+.ico-db::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 4px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 4px 0 currentColor;
+}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · GitHub Manager{% endblock %}
+
+{% block content %}
+<!-- ============ Welcome ============ -->
+<div class="welcome">
+  <div>
+    <h1>Welcome, {{ session.get('login') }}!</h1>
+    <p>Manage your GitHub repositories easily from here.</p>
+  </div>
+  <span class="pill ok"><span class="dot"></span> GitHub Connected</span>
+</div>
+
+<!-- ============ Stats ============ -->
+<div class="stats">
+  <div class="stat">
+    <span class="ic blue"><span class="ico ico-branch"></span></span>
+    <div>
+      <div class="num">{{ stats.repos }}</div>
+      <div class="lbl">Total Repositories</div>
+    </div>
+  </div>
+  <div class="stat">
+    <span class="ic green"><span class="ico ico-plus"></span></span>
+    <div>
+      <div class="num">New</div>
+      <div class="lbl">Create a Repository</div>
+    </div>
+  </div>
+  <div class="stat">
+    <span class="ic purple"><span class="ico ico-upload"></span></span>
+    <div>
+      <div class="num">{{ stats.files }}</div>
+      <div class="lbl">Files Uploaded</div>
+    </div>
+  </div>
+  <div class="stat">
+    <span class="ic amber"><span class="ico ico-zip"></span></span>
+    <div>
+      <div class="num">{{ stats.zips }}</div>
+      <div class="lbl">ZIP Unzip &amp; Push</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Create repo ============ -->
+<div class="card">
+  <div class="card-head">
+    <div>
+      <h2><span class="ico ico-plus"></span> Create New Repository</h2>
+      <p class="sub">A fresh repository will be created under your account.</p>
+    </div>
+  </div>
+
+  <form method="post" action="{{ url_for('create_repo_route') }}">
+    <div class="field">
+      <label for="name">Repository Name</label>
+      <input type="text" id="name" name="name" placeholder="e.g. my-project" required />
+    </div>
+
+    <div class="field">
+      <label>Visibility</label>
+      <div class="radio-cards">
+        <label class="radio-card">
+          <input type="radio" name="private" value="off" checked />
+          <span class="t"><span class="ico ico-globe"></span> Public</span>
+          <span class="d">Anyone can see this repository.</span>
+        </label>
+        <label class="radio-card">
+          <input type="radio" name="private" value="on" />
+          <span class="t"><span class="ico ico-lock"></span> Private</span>
+          <span class="d">Only you and collaborators can see it.</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="description">Description <span class="text-muted">(optional)</span></label>
+      <input type="text" id="description" name="description"
+             placeholder="Short description of the repository" />
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="auto_init" name="auto_init" checked />
+      <label for="auto_init" style="margin:0">Initialize with a README</label>
+    </div>
+
+    <button class="btn btn-green" type="submit">
+      <span class="ico ico-plus"></span> Create Repository
+    </button>
+  </form>
+</div>
+
+<!-- ============ Repo table ============ -->
+<div class="card">
+  <div class="card-head">
+    <div>
+      <h2><span class="ico ico-branch"></span> My Repositories</h2>
+      <p class="sub">{{ repos|length }} repository(ies) available to your token.</p>
+    </div>
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard') }}">
+      <span class="ico ico-refresh"></span> Refresh
+    </a>
+  </div>
+
+  {% if repos %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Visibility</th>
+          <th>Created At</th>
+          <th style="text-align:right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in repos %}
+        <tr>
+          <td>
+            <a class="cell-name" href="{{ url_for('repo_view', owner=r.owner.login, repo=r.name) }}">
+              <span class="ico ico-branch"></span> {{ r.name }}
+            </a>
+          </td>
+          <td>
+            {% if r.private %}
+              <span class="badge private"><span class="ico ico-lock"></span> Private</span>
+            {% else %}
+              <span class="badge public"><span class="ico ico-globe"></span> Public</span>
+            {% endif %}
+          </td>
+          <td class="muted nowrap">{{ (r.created_at|string)[:10] if r.created_at else '—' }}</td>
+          <td>
+            <div class="row-actions" style="justify-content:flex-end">
+              <a class="btn btn-primary btn-sm"
+                 href="{{ url_for('repo_view', owner=r.owner.login, repo=r.name) }}">
+                <span class="ico ico-folder"></span> Files
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <span class="ico ico-branch"></span>
+    <div class="e-title">No repositories yet</div>
+    <div class="e-sub">Create your first repository using the form above.</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

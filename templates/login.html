@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Sign in · GitHub Manager{% endblock %}
+
+{% block auth_content %}
+<div class="login-page">
+  <!-- ============ Hero ============ -->
+  <section class="login-hero">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <span class="brand-text">GitHub Manager<small>Repo Control Panel</small></span>
+    </div>
+
+    <div class="hero-body">
+      <h2>Manage your GitHub repositories from one clean dashboard.</h2>
+      <p>
+        Create repositories, upload and delete files, and push entire ZIP
+        archives in a single commit — all with your Personal Access Token.
+      </p>
+
+      <div class="hero-feats">
+        <div class="hero-feat">
+          <span class="ic"><span class="ico ico-plus"></span></span>
+          Create public or private repositories instantly
+        </div>
+        <div class="hero-feat">
+          <span class="ic"><span class="ico ico-upload"></span></span>
+          Upload &amp; delete files with a few clicks
+        </div>
+        <div class="hero-feat">
+          <span class="ic"><span class="ico ico-zip"></span></span>
+          Upload a ZIP — it unzips and pushes automatically
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-foot">Built with Flask &middot; GitHub REST API v3</div>
+  </section>
+
+  <!-- ============ Form ============ -->
+  <section class="login-form-wrap">
+    <div class="login-form">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <h1>Welcome back</h1>
+      <p class="lead">Sign in with your GitHub account to continue.</p>
+
+      <form method="post" action="{{ url_for('login') }}">
+        <div class="field">
+          <label for="username">GitHub Username</label>
+          <input type="text" id="username" name="username"
+                 placeholder="octocat" autocomplete="username" />
+        </div>
+
+        <div class="field">
+          <label for="token">Personal Access Token (PAT)</label>
+          <input type="password" id="token" name="token"
+                 placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                 autocomplete="off" required />
+          <div class="help">
+            Needs the <strong>repo</strong> scope (add <strong>delete_repo</strong>
+            to delete repositories).
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit">
+          <span class="ico ico-arrow"></span> Sign in
+        </button>
+      </form>
+
+      <details>
+        <summary>How do I create a token?</summary>
+        <ol>
+          <li>Open GitHub → <strong>Settings → Developer settings</strong></li>
+          <li><strong>Personal access tokens → Tokens (classic)</strong></li>
+          <li>Click <strong>Generate new token (classic)</strong></li>
+          <li>Select the <code>repo</code> scope and generate</li>
+          <li>Copy the token and paste it above</li>
+        </ol>
+        <p class="text-sm" style="margin:12px 0 0">
+          Direct link:
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=GitHub%20Manager"
+             target="_blank" rel="noopener">Create a new token</a>
+        </p>
+      </details>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

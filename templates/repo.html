@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}{{ owner }}/{{ repo }} · GitHub Manager{% endblock %}
+
+{% block content %}
+<!-- ============ Breadcrumb ============ -->
+<div class="crumbs">
+  <a href="{{ url_for('repositories') }}">My Repositories</a>
+  <span class="sep">/</span>
+  <a href="{{ url_for('repo_view', owner=owner, repo=repo) }}">{{ repo }}</a>
+  {% for c in crumbs %}
+    <span class="sep">/</span>
+    {% if loop.last %}
+      <span class="current">{{ c.name }}</span>
+    {% else %}
+      <a href="{{ url_for('repo_view', owner=owner, repo=repo, path=c.path) }}">{{ c.name }}</a>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<div class="welcome">
+  <div>
+    <h1 style="display:flex;align-items:center;gap:12px">
+      {{ repo }}
+      {% if info.private %}
+        <span class="badge private"><span class="ico ico-lock"></span> Private</span>
+      {% else %}
+        <span class="badge public"><span class="ico ico-globe"></span> Public</span>
+      {% endif %}
+    </h1>
+    {% if info.description %}<p>{{ info.description }}</p>{% endif %}
+  </div>
+  <a class="btn btn-ghost" href="{{ info.html_url }}" target="_blank" rel="noopener">
+    <span class="ico ico-arrow"></span> View on GitHub
+  </a>
+</div>
+
+<div class="repo-layout">
+  <!-- ============ Left: tree ============ -->
+  <aside class="tree">
+    <div class="tree-head">
+      <span class="ico ico-branch"></span>
+      <span class="rn">{{ repo }}</span>
+    </div>
+    <a class="tree-item {{ 'active' if not path }}"
+       href="{{ url_for('repo_view', owner=owner, repo=repo) }}">
+      <span class="ico ico-folder"></span> <span class="nm">/ (root)</span>
+    </a>
+    {% for item in items %}
+    <a class="tree-item"
+       href="{{ url_for('repo_view', owner=owner, repo=repo, path=item.path) }}">
+      {% if item.type == 'dir' %}
+        <span class="ico ico-folder"></span>
+      {% else %}
+        <span class="ico ico-file"></span>
+      {% endif %}
+      <span class="nm">{{ item.name }}</span>
+    </a>
+    {% endfor %}
+    {% if not items %}
+      <div class="text-sm text-muted" style="padding:8px 10px">Empty folder</div>
+    {% endif %}
+  </aside>
+
+  <!-- ============ Right: manager ============ -->
+  <div>
+    <!-- File table -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2><span class="ico ico-folder"></span> Files</h2>
+          <p class="sub">Contents of <code>/{{ path }}</code></p>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('repo_view', owner=owner, repo=repo, path=path) }}">
+          <span class="ico ico-refresh"></span> Refresh
+        </a>
+      </div>
+
+      {% if items %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Size</th>
+              <th>Type</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>
+                {% if item.type == 'dir' %}
+                  <a class="cell-name folder"
+                     href="{{ url_for('repo_view', owner=owner, repo=repo, path=item.path) }}">
+                    <span class="ico ico-folder"></span> {{ item.name }}
+                  </a>
+                {% else %}
+                  <span class="cell-name">
+                    <span class="ico ico-file"></span> {{ item.name }}
+                  </span>
+                {% endif %}
+              </td>
+              <td class="muted nowrap">
+                {% if item.type == 'dir' %}—{% else %}{{ item.size }} B{% endif %}
+              </td>
+              <td class="muted nowrap">
+                {% if item.type == 'dir' %}Folder{% else %}{{ item.kind }}{% endif %}
+              </td>
+              <td>
+                <div class="row-actions" style="justify-content:flex-end">
+                  {% if item.type != 'dir' %}
+                    {% if item.download_url %}
+                    <a class="btn btn-ghost btn-sm" href="{{ item.download_url }}"
+                       target="_blank" rel="noopener" download>
+                      <span class="ico ico-download"></span> Download
+                    </a>
+                    {% endif %}
+                    <form method="post"
+                          action="{{ url_for('delete_file_route', owner=owner, repo=repo) }}"
+                          onsubmit="return confirm('Delete {{ item.name }}?');">
+                      <input type="hidden" name="path" value="{{ item.path }}" />
+                      <button class="btn btn-danger btn-sm" type="submit">
+                        <span class="ico ico-trash"></span> Delete
+                      </button>
+                    </form>
+                  {% else %}
+                    <span class="muted">—</span>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty">
+        <span class="ico ico-folder"></span>
+        <div class="e-title">This folder is empty</div>
+        <div class="e-sub">Upload files or a ZIP archive below.</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Upload files -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2><span class="ico ico-upload"></span> Upload Files</h2>
+          <p class="sub">Add one or more files into <code>/{{ path }}</code></p>
+        </div>
+      </div>
+      <form method="post"
+            action="{{ url_for('upload_files', owner=owner, repo=repo) }}"
+            enctype="multipart/form-data">
+        <input type="hidden" name="path" value="{{ path }}" />
+        <div class="grid-2">
+          <div class="field">
+            <label for="files">Choose file(s)</label>
+            <input type="file" id="files" name="files" multiple required />
+          </div>
+          <div class="field">
+            <label for="msg1">Commit message</label>
+            <input type="text" id="msg1" name="message"
+                   placeholder="Upload files via GitHub Manager" />
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">
+          <span class="ico ico-upload"></span> Upload
+        </button>
+      </form>
+    </div>
+
+    <!-- Upload ZIP -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2><span class="ico ico-zip"></span> Upload ZIP File (Auto Unzip &amp; Push)</h2>
+          <p class="sub">The archive is extracted and pushed in a single commit.</p>
+        </div>
+      </div>
+
+      <form method="post"
+            action="{{ url_for('upload_zip', owner=owner, repo=repo) }}"
+            enctype="multipart/form-data"
+            id="zipForm">
+        <input type="hidden" name="path" value="{{ path }}" />
+
+        <label class="dropzone" for="zipfile" id="dropzone">
+          <span class="ico ico-cloud"></span>
+          <div class="dz-title">Drag &amp; drop your ZIP file here</div>
+          <div class="dz-sub">or click to browse</div>
+          <span class="btn btn-primary btn-sm">
+            <span class="ico ico-zip"></span> Choose ZIP File
+          </span>
+          <div class="dz-file" id="dzFile"></div>
+          <input type="file" id="zipfile" name="zipfile" accept=".zip" required hidden />
+        </label>
+
+        <div class="grid-2" style="margin-top:16px">
+          <div class="field" style="margin-bottom:0">
+            <label for="msg2">Commit message</label>
+            <input type="text" id="msg2" name="message"
+                   placeholder="Upload ZIP via GitHub Manager" />
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Options</label>
+            <div class="check-row" style="margin:0;padding-top:10px">
+              <input type="checkbox" id="strip_root" name="strip_root" checked />
+              <label for="strip_root" style="margin:0">Strip single top-level folder</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-amber" type="submit" style="margin-top:16px">
+          <span class="ico ico-upload"></span> Unzip &amp; Push
+        </button>
+      </form>
+
+      <div class="steps">
+        <div class="step">
+          <span class="n">1</span>
+          <div>
+            <div class="st">Upload ZIP File</div>
+            <div class="sd">Select and upload your ZIP file.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">2</span>
+          <div>
+            <div class="st">Auto Unzip</div>
+            <div class="sd">The file is automatically extracted.</div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">3</span>
+          <div>
+            <div class="st">Push to Repository</div>
+            <div class="sd">All files are added in one commit.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tiny progressive enhancement: show the chosen file name + drag highlight.
+  (function () {
+    var dz = document.getElementById('dropzone');
+    var input = document.getElementById('zipfile');
+    var out = document.getElementById('dzFile');
+    if (!dz || !input) return;
+    input.addEventListener('change', function () {
+      out.textContent = input.files.length ? '✓ ' + input.files[0].name : '';
+    });
+    ['dragenter', 'dragover'].forEach(function (e) {
+      dz.addEventListener(e, function (ev) {
+        ev.preventDefault();
+        dz.classList.add('drag');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (e) {
+      dz.addEventListener(e, function (ev) {
+        ev.preventDefault();
+        dz.classList.remove('drag');
+      });
+    });
+    dz.addEventListener('drop', function (ev) {
+      if (ev.dataTransfer && ev.dataTransfer.files.length) {
+        input.files = ev.dataTransfer.files;
+        out.textContent = '✓ ' + ev.dataTransfer.files[0].name;
+      }
+    });
+  })();
+</script>
+{% endblock %}
+
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

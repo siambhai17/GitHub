@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Settings · GitHub Manager{% endblock %}
+
+{% block content %}
+<div class="welcome">
+  <div>
+    <h1>Settings</h1>
+    <p>Account and session information.</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <h2><span class="ico ico-user"></span> Account</h2>
+        <p class="sub">The GitHub account currently signed in.</p>
+      </div>
+    </div>
+    <div class="side-user" style="margin-bottom:0">
+      <span class="avatar" style="width:48px;height:48px;border-radius:12px;font-size:18px">
+        {{ (session.get('login') or '?')[0] }}
+      </span>
+      <div>
+        <div class="u-name" style="font-size:16px">{{ session.get('name') }}</div>
+        <div class="u-status"><span class="dot"></span> Connected to GitHub</div>
+      </div>
+    </div>
+    <hr class="hr" />
+    <p class="text-sm text-muted mb-0">
+      Username: <strong style="color:var(--text)">{{ session.get('login') }}</strong>
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <h2><span class="ico ico-lock"></span> Token &amp; Security</h2>
+        <p class="sub">How your Personal Access Token is handled.</p>
+      </div>
+    </div>
+    <p class="text-sm text-muted">
+      Your token is stored only in the signed Flask session cookie and is never
+      written to disk or logged. Signing out clears it immediately.
+    </p>
+    <p class="text-sm text-muted mb-0">
+      Required scopes: <code>repo</code> (and <code>delete_repo</code> to delete
+      repositories).
+    </p>
+    <hr class="hr" />
+    <a class="btn btn-danger" href="{{ url_for('logout') }}">
+      <span class="ico ico-close"></span> Sign out &amp; clear token
+    </a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div>
+      <h2><span class="ico ico-db"></span> Session Activity</h2>
+      <p class="sub">Counters for the current session.</p>
+    </div>
+  </div>
+  <div class="stats" style="margin-bottom:0">
+    <div class="stat">
+      <span class="ic purple"><span class="ico ico-upload"></span></span>
+      <div>
+        <div class="num">{{ stats.files }}</div>
+        <div class="lbl">Files Uploaded</div>
+      </div>
+    </div>
+    <div class="stat">
+      <span class="ic amber"><span class="ico ico-zip"></span></span>
+      <div>
+        <div class="num">{{ stats.zips }}</div>
+        <div class="lbl">ZIP Pushes</div>
+      </div>
+    </div>
+    <div class="stat">
+      <span class="ic blue"><span class="ico ico-branch"></span></span>
+      <div>
+        <div class="num">{{ stats.repos }}</div>
+        <div class="lbl">Repositories</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

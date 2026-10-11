@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}My Repositories · GitHub Manager{% endblock %}
+
+{% block content %}
+<div class="welcome">
+  <div>
+    <h1>My Repositories</h1>
+    <p>All repositories your token can access.</p>
+  </div>
+  <a class="btn btn-green" href="{{ url_for('create_page') }}">
+    <span class="ico ico-plus"></span> New Repository
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div>
+      <h2><span class="ico ico-branch"></span> Repositories</h2>
+      <p class="sub">{{ repos|length }} total</p>
+    </div>
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('repositories') }}">
+      <span class="ico ico-refresh"></span> Refresh
+    </a>
+  </div>
+
+  {% if repos %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Visibility</th>
+          <th>Created At</th>
+          <th style="text-align:right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in repos %}
+        <tr>
+          <td>
+            <a class="cell-name" href="{{ url_for('repo_view', owner=r.owner.login, repo=r.name) }}">
+              <span class="ico ico-branch"></span>
+              <span>{{ r.full_name }}
+                {% if r.description %}<span class="meta">{{ r.description }}</span>{% endif %}
+              </span>
+            </a>
+          </td>
+          <td>
+            {% if r.private %}
+              <span class="badge private"><span class="ico ico-lock"></span> Private</span>
+            {% else %}
+              <span class="badge public"><span class="ico ico-globe"></span> Public</span>
+            {% endif %}
+          </td>
+          <td class="muted nowrap">{{ (r.created_at|string)[:10] if r.created_at else '—' }}</td>
+          <td>
+            <div class="row-actions" style="justify-content:flex-end">
+              <a class="btn btn-primary btn-sm"
+                 href="{{ url_for('repo_view', owner=r.owner.login, repo=r.name) }}">
+                <span class="ico ico-folder"></span> Files
+              </a>
+              <a class="btn btn-ghost btn-sm" href="{{ r.html_url }}" target="_blank" rel="noopener">
+                <span class="ico ico-arrow"></span> GitHub
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <span class="ico ico-branch"></span>
+    <div class="e-title">No repositories found</div>
+    <div class="e-sub">Create one to get started.</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
